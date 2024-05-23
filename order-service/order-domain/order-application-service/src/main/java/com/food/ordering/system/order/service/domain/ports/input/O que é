@@ -1,0 +1,1 @@
+Usamos as portas aqui para ser saidas para camadas de infraestrutura ou de outros modulos, usados pela camada de dominio para alçancar essas camadas de infraestrutura.
