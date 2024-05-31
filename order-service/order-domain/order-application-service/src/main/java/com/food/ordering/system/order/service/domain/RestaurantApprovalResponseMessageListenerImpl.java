@@ -10,8 +10,10 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @Validated
 public class RestaurantApprovalResponseMessageListenerImpl implements RestaurantApprovalResponseMessageListener {
+
+
     @Override
-    public void oderApproved(RestaurantApprovalResponse restaurantApprovalResponse) {
+    public void orderApproved(RestaurantApprovalResponse restaurantApprovalResponse) {
 
     }
 
