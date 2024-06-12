@@ -4,9 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
-/***
- * Ele fala sobre o compareTo e melhor do que o equals pq pode dar ruim na comparacao, por causa do ponto flutuante
- */
 public class Money {
     private final BigDecimal amount;
 

@@ -17,14 +17,17 @@ public class PaymentDataAccessMapper {
                 .customerId(payment.getCustomerId().getValue())
                 .orderId(payment.getOrderId().getValue())
                 .price(payment.getPrice().getAmount())
-                .status(payment.getStatus())
+                .status(payment.getPaymentStatus())
                 .createdAt(payment.getCreatedAt())
                 .build();
     }
 
     public Payment paymentEntityToPayment(PaymentEntity paymentEntity) {
-        return new Payment.Builder(new OrderId(paymentEntity.getOrderId()), new CustomerId(paymentEntity.getCustomerId()), new Money(paymentEntity.getPrice()))
-                .id(new PaymentId(paymentEntity.getId()))
+        return Payment.builder()
+                .paymentId(new PaymentId(paymentEntity.getId()))
+                .customerId(new CustomerId(paymentEntity.getCustomerId()))
+                .orderId(new OrderId(paymentEntity.getOrderId()))
+                .price(new Money(paymentEntity.getPrice()))
                 .createdAt(paymentEntity.getCreatedAt())
                 .build();
     }
