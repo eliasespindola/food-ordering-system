@@ -16,73 +16,18 @@ public class Order extends AggregateRoot<OrderId> {
     private final StreetAddress deliveryAddress;
     private final Money price;
     private final List<OrderItem> items;
-    /***
-     * Como você vê, esses 3 campos não são finais porque eu os definirei durante a lógica de negócios após a criação
-     */
+
     private TrackingId trackingId;
     private OrderStatus orderStatus;
     private List<String> failureMessages;
 
     public static final String FAILURE_MESSAGE_DELIMITER = ",";
 
-
-    private Order(Builder builder) {
-        super.setId(builder.id);
-        customerId = builder.customerId;
-        restaurantId = builder.restaurantId;
-        deliveryAddress = builder.deliveryAddress;
-        price = builder.price;
-        items = builder.items;
-        trackingId = builder.trackingId;
-        orderStatus = builder.orderStatus;
-        failureMessages = builder.failureMessages;
-    }
-
-
-    public CustomerId getCustomerId() {
-        return customerId;
-    }
-
-    public RestaurantId getRestaurantId() {
-        return restaurantId;
-    }
-
-    public StreetAddress getDeliveryAddress() {
-        return deliveryAddress;
-    }
-
-    public Money getPrice() {
-        return price;
-    }
-
-    public List<OrderItem> getItems() {
-        return items;
-    }
-
-    public TrackingId getTrackingId() {
-        return trackingId;
-    }
-
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
-    }
-
-    public List<String> getFailureMessages() {
-        return failureMessages;
-    }
-
     public void initializeOrder() {
         setId(new OrderId(UUID.randomUUID()));
-        this.trackingId = new TrackingId(UUID.randomUUID());
-        this.orderStatus = OrderStatus.PENDING;
+        trackingId = new TrackingId(UUID.randomUUID());
+        orderStatus = OrderStatus.PENDING;
         initializeOrderItems();
-    }
-
-    void initializeOrderItems() {
-        long itemId = 1;
-        for (OrderItem orderItem : items) {
-            orderItem.initializeOrderItem(super.getId(), new OrderItemId(itemId++));
-        }
     }
 
     public void validateOrder() {
@@ -99,7 +44,7 @@ public class Order extends AggregateRoot<OrderId> {
     }
 
     public void approve() {
-        if (orderStatus != OrderStatus.PAID) {
+        if(orderStatus != OrderStatus.PAID) {
             throw new OrderDomainException("Order is not in correct state for approve operation!");
         }
         orderStatus = OrderStatus.APPROVED;
@@ -150,7 +95,7 @@ public class Order extends AggregateRoot<OrderId> {
 
         if (!price.equals(orderItemsTotal)) {
             throw new OrderDomainException("Total price: " + price.getAmount()
-                    + " is not equal to Order items total: " + orderItemsTotal.getAmount() + "!");
+                + " is not equal to Order items total: " + orderItemsTotal.getAmount() + "!");
         }
     }
 
@@ -161,8 +106,63 @@ public class Order extends AggregateRoot<OrderId> {
         }
     }
 
+    private void initializeOrderItems() {
+        long itemId = 1;
+        for (OrderItem orderItem: items) {
+            orderItem.initializeOrderItem(super.getId(), new OrderItemId(itemId++));
+        }
+    }
+
+    private Order(Builder builder) {
+        super.setId(builder.orderId);
+        customerId = builder.customerId;
+        restaurantId = builder.restaurantId;
+        deliveryAddress = builder.deliveryAddress;
+        price = builder.price;
+        items = builder.items;
+        trackingId = builder.trackingId;
+        orderStatus = builder.orderStatus;
+        failureMessages = builder.failureMessages;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public CustomerId getCustomerId() {
+        return customerId;
+    }
+
+    public RestaurantId getRestaurantId() {
+        return restaurantId;
+    }
+
+    public StreetAddress getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public Money getPrice() {
+        return price;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public TrackingId getTrackingId() {
+        return trackingId;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public List<String> getFailureMessages() {
+        return failureMessages;
+    }
+
     public static final class Builder {
-        private OrderId id;
+        private OrderId orderId;
         private CustomerId customerId;
         private RestaurantId restaurantId;
         private StreetAddress deliveryAddress;
@@ -175,12 +175,8 @@ public class Order extends AggregateRoot<OrderId> {
         private Builder() {
         }
 
-        public static Builder builder() {
-            return new Builder();
-        }
-
         public Builder orderId(OrderId val) {
-            id = val;
+            orderId = val;
             return this;
         }
 

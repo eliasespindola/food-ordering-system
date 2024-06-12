@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class Payment extends AggregateRoot<PaymentId> {
+
     private final OrderId orderId;
     private final CustomerId customerId;
     private final Money price;
-    private PaymentStatus status;
+
+    private PaymentStatus paymentStatus;
     private ZonedDateTime createdAt;
 
     public void initializePayment() {
@@ -24,24 +26,27 @@ public class Payment extends AggregateRoot<PaymentId> {
         createdAt = ZonedDateTime.now(ZoneId.of("UTC"));
     }
 
-    public void validatePayment(List<String> failureMessage) {
+    public void validatePayment(List<String> failureMessages) {
         if (price == null || !price.isGreaterThanZero()) {
-            failureMessage.add("Total price must be greater than zero!");
+            failureMessages.add("Total price must be greater than zero!");
         }
     }
 
-    public void updateStatus(PaymentStatus status) {
-        this.status = status;
+    public void updateStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 
-
     private Payment(Builder builder) {
-        super.setId(builder.paymentId);
+        setId(builder.paymentId);
         orderId = builder.orderId;
         customerId = builder.customerId;
         price = builder.price;
-        status = builder.status;
+        paymentStatus = builder.paymentStatus;
         createdAt = builder.createdAt;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
 
@@ -57,8 +62,8 @@ public class Payment extends AggregateRoot<PaymentId> {
         return price;
     }
 
-    public PaymentStatus getStatus() {
-        return status;
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
     }
 
     public ZonedDateTime getCreatedAt() {
@@ -67,25 +72,37 @@ public class Payment extends AggregateRoot<PaymentId> {
 
     public static final class Builder {
         private PaymentId paymentId;
-        private final OrderId orderId;
-        private final CustomerId customerId;
-        private final Money price;
-        private PaymentStatus status;
+        private OrderId orderId;
+        private CustomerId customerId;
+        private Money price;
+        private PaymentStatus paymentStatus;
         private ZonedDateTime createdAt;
 
-        public Builder(OrderId orderId, CustomerId customerId, Money price) {
-            this.orderId = orderId;
-            this.customerId = customerId;
-            this.price = price;
+        private Builder() {
         }
 
-        public Builder id(PaymentId val) {
+        public Builder paymentId(PaymentId val) {
             paymentId = val;
             return this;
         }
 
-        public Builder status(PaymentStatus val) {
-            status = val;
+        public Builder orderId(OrderId val) {
+            orderId = val;
+            return this;
+        }
+
+        public Builder customerId(CustomerId val) {
+            customerId = val;
+            return this;
+        }
+
+        public Builder price(Money val) {
+            price = val;
+            return this;
+        }
+
+        public Builder paymentStatus(PaymentStatus val) {
+            paymentStatus = val;
             return this;
         }
 

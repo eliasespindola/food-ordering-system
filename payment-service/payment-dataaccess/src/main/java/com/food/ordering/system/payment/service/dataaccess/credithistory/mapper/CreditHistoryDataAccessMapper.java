@@ -11,8 +11,11 @@ import org.springframework.stereotype.Component;
 public class CreditHistoryDataAccessMapper {
 
     public CreditHistory creditHistoryEntityToCreditHistory(CreditHistoryEntity creditHistoryEntity) {
-        return new CreditHistory.Builder(new CustomerId(creditHistoryEntity.getCustomerId()), new Money(creditHistoryEntity.getAmount()), creditHistoryEntity.getType())
-                .id(new CreditHistoryId(creditHistoryEntity.getId()))
+        return CreditHistory.builder()
+                .creditHistoryId(new CreditHistoryId(creditHistoryEntity.getId()))
+                .customerId(new CustomerId(creditHistoryEntity.getCustomerId()))
+                .amount(new Money(creditHistoryEntity.getAmount()))
+                .transactionType(creditHistoryEntity.getType())
                 .build();
     }
 

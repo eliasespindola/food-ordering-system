@@ -2,11 +2,7 @@ package com.food.ordering.system.domain.entity;
 
 import java.util.Objects;
 
-/***
- * Variavel generica para colocar em entidades
- * @param <ID>
- */
-public abstract  class BaseEntity<ID> {
+public abstract class BaseEntity<ID> {
     private ID id;
 
     public ID getId() {
@@ -22,7 +18,7 @@ public abstract  class BaseEntity<ID> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BaseEntity<?> that = (BaseEntity<?>) o;
-        return Objects.equals(id, that.id);
+        return id.equals(that.id);
     }
 
     @Override

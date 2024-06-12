@@ -7,16 +7,22 @@ import com.food.ordering.system.payment.service.domain.valueobject.CreditHistory
 import com.food.ordering.system.payment.service.domain.valueobject.TransactionType;
 
 public class CreditHistory extends BaseEntity<CreditHistoryId> {
+
     private final CustomerId customerId;
     private final Money amount;
     private final TransactionType transactionType;
 
     private CreditHistory(Builder builder) {
-        setId(builder.id);
+        setId(builder.creditHistoryId);
         customerId = builder.customerId;
         amount = builder.amount;
         transactionType = builder.transactionType;
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
 
     public CustomerId getCustomerId() {
         return customerId;
@@ -30,21 +36,32 @@ public class CreditHistory extends BaseEntity<CreditHistoryId> {
         return transactionType;
     }
 
-
     public static final class Builder {
-        private CreditHistoryId id;
-        private final CustomerId customerId;
-        private final Money amount;
-        private final TransactionType transactionType;
+        private CreditHistoryId creditHistoryId;
+        private CustomerId customerId;
+        private Money amount;
+        private TransactionType transactionType;
 
-        public Builder(CustomerId customerId, Money amount, TransactionType transactionType) {
-            this.customerId = customerId;
-            this.amount = amount;
-            this.transactionType = transactionType;
+        private Builder() {
         }
 
-        public Builder id(CreditHistoryId val) {
-            id = val;
+        public Builder creditHistoryId(CreditHistoryId val) {
+            creditHistoryId = val;
+            return this;
+        }
+
+        public Builder customerId(CustomerId val) {
+            customerId = val;
+            return this;
+        }
+
+        public Builder amount(Money val) {
+            amount = val;
+            return this;
+        }
+
+        public Builder transactionType(TransactionType val) {
+            transactionType = val;
             return this;
         }
 
